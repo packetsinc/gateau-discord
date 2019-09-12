@@ -24,7 +24,7 @@ async def weather(ctx, arg):
     geolng = str(gmaps.geocode(gtarget)[0]['geometry']['location']['lng'])
     geonam = str(gmaps.geocode(gtarget)[0]['formatted_address'])
 
-    dsdata = forecast(weather_key, geolat, geolng)
+    dsdata = forecast.Forecast(weather_key, geolat, geolng)
 
     try:
         condout = str(dsdata.minutely.summary)
