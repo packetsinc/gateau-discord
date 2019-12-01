@@ -31,6 +31,12 @@ async def weather(ctx, arg):
     except AttributeError:
         condout = str(dsdata.hourly.summary)
     try:
+        alenout = str(dsdata.alerts[0].title)
+        aledout = str(dsdata.alerts[0].description)
+    except AttributeError:
+        alenout = "Unknown."
+        aledout = "Unknown."
+    try:
         tempout = str(dsdata.temperature) + "°F, " + str(round((float(dsdata.temperature) - 32) * 5 / 9, 2)) + " °C"
     except AttributeError:
         tempout = "Unknown."
@@ -54,6 +60,10 @@ async def weather(ctx, arg):
         strmout = str(dsdata.nearestStormDistance) + " mi"
     except AttributeError:
         strmout = "Unknown."
+    try:
+        humout = str("{0:.0%}".format(float(dsdata.humidity)))
+    except AttributeError:
+        humout = "Unknown."
     respout = 'Requested by ' + str(ctx.message.author.display_name) + '. Query took ' + str(dsdata.response_headers['X-response-Time']) + ' to process.'
 
     config = configparser.ConfigParser()
@@ -76,8 +86,11 @@ async def weather(ctx, arg):
     embed.add_field(name="<:Wind:556349822014062618> Wind", value=windout, inline=True)
     embed.add_field(name="<:Cloud_Download:556356419780214785> Pressure", value=presout, inline=True)
     embed.add_field(name="<:Cloud_Download:556359914017128467> Visibility", value=visiout, inline=True)
+    embed.add_field(name="<:Umbrella:556358404638113801> Relative Humidity", value=humout, inline=True)
     embed.add_field(name="<:Umbrella:556358404638113801> Precipitation Chance", value=precout, inline=True)
     embed.add_field(name="<:Compass:556359903976095765> Nearest Storm Distance", value=strmout, inline=True)
+    if alenout != "Unknown.":
+        embed.add_field(name=alenout, value=str(aledout), inline=False)
 
     await ctx.send(embed=embed)
 
